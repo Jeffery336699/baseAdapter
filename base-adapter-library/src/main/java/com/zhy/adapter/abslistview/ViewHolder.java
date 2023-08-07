@@ -21,6 +21,9 @@ import android.widget.TextView;
 
 public class ViewHolder
 {
+    /**
+     * key:子控件的id,value:该id对应的View
+     */
     private SparseArray<View> mViews;
     protected int mPosition;
     private View mConvertView;
@@ -32,7 +35,7 @@ public class ViewHolder
         mContext = context;
         mConvertView = itemView;
         mPosition = position;
-        mViews = new SparseArray<View>();
+        mViews = new SparseArray<>();
         mConvertView.setTag(this);
     }
 

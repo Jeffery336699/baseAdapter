@@ -1,5 +1,6 @@
 package com.zhy.sample;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -22,9 +23,9 @@ import com.zhy.adapter.recyclerview.wrapper.LoadMoreWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-public class RecyclerViewActivity extends AppCompatActivity
-{
+public class RecyclerViewActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private List<String> mDatas = new ArrayList<>();
@@ -33,10 +34,8 @@ public class RecyclerViewActivity extends AppCompatActivity
     private EmptyWrapper mEmptyWrapper;
     private LoadMoreWrapper mLoadMoreWrapper;
 
-
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recyclerview);
 
@@ -44,25 +43,43 @@ public class RecyclerViewActivity extends AppCompatActivity
 
         mRecyclerView = (RecyclerView) findViewById(R.id.id_recyclerview);
 //        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-//        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+//         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        // mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
 
-        mAdapter = new CommonAdapter<String>(this, R.layout.item_list, mDatas)
-        {
+        mAdapter = new CommonAdapter<String>(this, R.layout.item_list, mDatas) {
             @Override
-            protected void convert(ViewHolder holder, String s, int position)
-            {
+            protected void convert(ViewHolder holder, String s, int position) {
                 holder.setText(R.id.id_item_list_title, s + " : " + holder.getAdapterPosition() + " , " + holder.getLayoutPosition());
+                Random random = new Random();
+                holder.getConvertView().setBackgroundColor(Color.argb(255, random.nextInt(255), random.nextInt(255), random.nextInt(255)));
             }
         };
-
         initHeaderAndFooter();
 
-//        initEmptyView();
+        // initEmptyView();
 
-        mLoadMoreWrapper = new LoadMoreWrapper(mHeaderAndFooterWrapper);
+        // initMoreView();
+
+        mAdapter.setOnItemClickListener(new CommonAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+                Toast.makeText(RecyclerViewActivity.this, "pos = " + position, Toast.LENGTH_SHORT).show();
+                mAdapter.notifyItemRemoved(position);
+            }
+
+            @Override
+            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
+                return false;
+            }
+        });
+    }
+
+    private void initMoreView() {
+        // mLoadMoreWrapper = new LoadMoreWrapper(mHeaderAndFooterWrapper);
+
+        mLoadMoreWrapper = new LoadMoreWrapper(mAdapter);
         mLoadMoreWrapper.setLoadMoreView(R.layout.default_loading);
         mLoadMoreWrapper.setOnLoadMoreListener(new LoadMoreWrapper.OnLoadMoreListener()
         {
@@ -79,75 +96,61 @@ public class RecyclerViewActivity extends AppCompatActivity
                             mDatas.add("Add:" + i);
                         }
                         mLoadMoreWrapper.notifyDataSetChanged();
-
                     }
                 }, 3000);
             }
         });
 
         mRecyclerView.setAdapter(mLoadMoreWrapper);
-        mAdapter.setOnItemClickListener(new CommonAdapter.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(View view, RecyclerView.ViewHolder holder,  int position)
-            {
-                Toast.makeText(RecyclerViewActivity.this, "pos = " + position, Toast.LENGTH_SHORT).show();
-                mAdapter.notifyItemRemoved(position);
-            }
-
-            @Override
-            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position)
-            {
-                return false;
-            }
-        });
     }
 
-    private void initEmptyView()
-    {
+    private void initEmptyView() {
+        // FIXME: 空布局的演示
+        mDatas.clear();
+
         mEmptyWrapper = new EmptyWrapper(mAdapter);
+        // mEmptyWrapper = new EmptyWrapper(mHeaderAndFooterWrapper);
         mEmptyWrapper.setEmptyView(LayoutInflater.from(this).inflate(R.layout.empty_view, mRecyclerView, false));
+        mRecyclerView.setAdapter(mEmptyWrapper);
     }
 
-    private void initHeaderAndFooter()
-    {
-        mHeaderAndFooterWrapper = new HeaderAndFooterWrapper(mAdapter);
+    private void initHeaderAndFooter() {
+        // FIXME: 空数据的演示header,footer
+        // mDatas.clear();
 
+        mHeaderAndFooterWrapper = new HeaderAndFooterWrapper(mAdapter);
         TextView t1 = new TextView(this);
         t1.setText("Header 1");
         TextView t2 = new TextView(this);
         t2.setText("Header 2");
         mHeaderAndFooterWrapper.addHeaderView(t1);
         mHeaderAndFooterWrapper.addHeaderView(t2);
+
+        mRecyclerView.setAdapter(mHeaderAndFooterWrapper);
     }
 
-    private void initDatas()
-    {
-        for (int i = 'A'; i <= 'z'; i++)
-        {
+    private void initDatas() {
+        for (int i = 'A'; i <= 'z'; i++) {
             mDatas.add((char) i + "");
         }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_recycler_view, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        switch (id)
-        {
+        switch (id) {
             case R.id.action_linear:
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
                 break;
@@ -164,16 +167,14 @@ public class RecyclerViewActivity extends AppCompatActivity
     }
 
     @Override
-    public void onStart()
-    {
+    public void onStart() {
         super.onStart();
 
 
     }
 
     @Override
-    public void onStop()
-    {
+    public void onStop() {
         super.onStop();
 
 

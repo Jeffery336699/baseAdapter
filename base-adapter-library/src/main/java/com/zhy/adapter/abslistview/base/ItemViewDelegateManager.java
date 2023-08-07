@@ -10,6 +10,11 @@ import com.zhy.adapter.abslistview.ViewHolder;
  */
 public class ItemViewDelegateManager<T>
 {
+    /**
+     * default情况下viewType是自动生成的,当然你也可以指定ViewType的值
+     * Key:viewType(一个随着数量增加,从0开始的)
+     * value:对象封装了ItemViewLayoutId、isForViewType等
+     */
     SparseArrayCompat<ItemViewDelegate<T>> delegates = new SparseArrayCompat();
 
     public int getItemViewDelegateCount()
@@ -74,6 +79,7 @@ public class ItemViewDelegateManager<T>
         for (int i = delegatesCount - 1; i >= 0; i--)
         {
             ItemViewDelegate<T> delegate = delegates.valueAt(i);
+            // TODO: 对该条数据item(bean)及它的position,来寻找它是哪个分类下,返回该分类的ViewType类型
             if (delegate.isForViewType(item, position))
             {
                 return delegates.keyAt(i);
@@ -89,7 +95,7 @@ public class ItemViewDelegateManager<T>
         for (int i = 0; i < delegatesCount; i++)
         {
             ItemViewDelegate<T> delegate = delegates.valueAt(i);
-
+            // TODO: 对该条数据item(bean)及它的position,来寻找它是哪个分类下,使用该分类来填充数据
             if (delegate.isForViewType(item, position))
             {
                 delegate.convert(holder, item, position);
@@ -117,6 +123,7 @@ public class ItemViewDelegateManager<T>
         for (int i = delegatesCount - 1; i >= 0; i--)
         {
             ItemViewDelegate<T> delegate = delegates.valueAt(i);
+            // TODO: 对该条数据item(bean)及它的position,来寻找它是哪个分类下,返回该分类的对象
             if (delegate.isForViewType(item, position))
             {
                 return delegate;

@@ -1,5 +1,6 @@
 package com.zhy.sample;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -24,13 +25,11 @@ public class MultiItemRvActivity extends AppCompatActivity
     private LoadMoreWrapper mLoadMoreWrapper;
     private List<ChatMessage> mDatas = new ArrayList<>();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recyclerview);
-
 
         mRecyclerView = (RecyclerView) findViewById(R.id.id_recyclerview);
 
@@ -48,16 +47,16 @@ public class MultiItemRvActivity extends AppCompatActivity
             {
                 new Handler().postDelayed(new Runnable()
                 {
+                    @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void run()
                     {
                         boolean coming = Math.random() > 0.5;
-                        ChatMessage msg = null;
+                        ChatMessage msg;
                         msg = new ChatMessage(coming ? R.drawable.renma : R.drawable.xiaohei, coming ? "人马" : "xiaohei", "where are you " + mDatas.size(),
                                 null, coming);
                         mDatas.add(msg);
                         mLoadMoreWrapper.notifyDataSetChanged();
-
                     }
                 }, 3000);
             }

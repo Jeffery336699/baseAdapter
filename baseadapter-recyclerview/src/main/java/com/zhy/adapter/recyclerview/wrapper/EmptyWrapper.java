@@ -11,6 +11,15 @@ import com.zhy.adapter.recyclerview.utils.WrapperUtils;
 
 /**
  * Created by zhy on 16/6/23.
+ * 包装类,牛皮的思路
+ * 用到的几个回调方法执行顺序
+ *
+ * onAttachedToRecyclerView(只调用一次)
+ * getItemCount
+ * getItemViewType
+ * onCreateViewHolder
+ * onBindViewHolder
+ * onViewAttachedToWindow
  */
 public class EmptyWrapper<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
@@ -52,6 +61,8 @@ public class EmptyWrapper<T> extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView)
     {
+        // TODO: 同样,这里是只针对empty布局的情况做处理,并且该LayoutManager是GridLayoutManager时,emptyView独占一行
+        //  recycleView.setAdapter(xXXAdapter),用的就是xXXAdapter
         WrapperUtils.onAttachedToRecyclerView(mInnerAdapter, recyclerView, new WrapperUtils.SpanSizeCallback()
         {
             @Override
@@ -68,8 +79,6 @@ public class EmptyWrapper<T> extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 return 1;
             }
         });
-
-
     }
 
     @Override

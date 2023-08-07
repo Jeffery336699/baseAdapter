@@ -3,6 +3,7 @@ package com.zhy.adapter.recyclerview.utils;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.ViewGroup;
 
 /**
@@ -10,6 +11,8 @@ import android.view.ViewGroup;
  */
 public class WrapperUtils
 {
+    private static final String TAG = "WrapperUtils";
+
     public interface SpanSizeCallback
     {
         int getSpanSize(GridLayoutManager layoutManager , GridLayoutManager.SpanSizeLookup oldLookup, int position);
@@ -40,14 +43,12 @@ public class WrapperUtils
     public static void setFullSpan(RecyclerView.ViewHolder holder)
     {
         ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
+        Log.i(TAG, "setFullSpan:  lp="+lp.getClass().getCanonicalName());
 
-        if (lp != null
-                && lp instanceof StaggeredGridLayoutManager.LayoutParams)
+        if (lp instanceof StaggeredGridLayoutManager.LayoutParams)
         {
-
             StaggeredGridLayoutManager.LayoutParams p = (StaggeredGridLayoutManager.LayoutParams) lp;
-
-            p.setFullSpan(true);
+            p.setFullSpan(true); // 在瀑布流中,该itemView占据全部跨度(eg 独占一行)
         }
     }
 }

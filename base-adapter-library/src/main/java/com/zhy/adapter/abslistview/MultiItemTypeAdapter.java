@@ -1,6 +1,7 @@
 package com.zhy.adapter.abslistview;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,6 @@ public class MultiItemTypeAdapter<T> extends BaseAdapter {
     protected List<T> mDatas;
 
     private ItemViewDelegateManager mItemViewDelegateManager;
-
 
     public MultiItemTypeAdapter(Context context, List<T> datas) {
         this.mContext = context;
@@ -64,9 +64,9 @@ public class MultiItemTypeAdapter<T> extends BaseAdapter {
         } else
         {
             viewHolder = (ViewHolder) convertView.getTag();
+            // TODO: 这里只需要更新位置
             viewHolder.mPosition = position;
         }
-
 
         convert(viewHolder, getItem(position), position);
         return viewHolder.getConvertView();

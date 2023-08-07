@@ -12,6 +12,15 @@ import com.zhy.adapter.recyclerview.utils.WrapperUtils;
 
 /**
  * Created by zhy on 16/6/23.
+ * 包装类,牛皮的思路
+ * 用到的几个回调方法执行顺序
+ *
+ * onAttachedToRecyclerView(只调用一次)
+ * getItemCount
+ * getItemViewType
+ * onCreateViewHolder
+ * onBindViewHolder
+ * onViewAttachedToWindow
  */
 public class LoadMoreWrapper<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
@@ -30,7 +39,6 @@ public class LoadMoreWrapper<T> extends RecyclerView.Adapter<RecyclerView.ViewHo
     {
         return mLoadMoreView != null || mLoadMoreLayoutId != 0;
     }
-
 
     private boolean isShowLoadMore(int position)
     {
@@ -108,20 +116,7 @@ public class LoadMoreWrapper<T> extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         if (isShowLoadMore(holder.getLayoutPosition()))
         {
-            setFullSpan(holder);
-        }
-    }
-
-    private void setFullSpan(RecyclerView.ViewHolder holder)
-    {
-        ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
-
-        if (lp != null
-                && lp instanceof StaggeredGridLayoutManager.LayoutParams)
-        {
-            StaggeredGridLayoutManager.LayoutParams p = (StaggeredGridLayoutManager.LayoutParams) lp;
-
-            p.setFullSpan(true);
+            WrapperUtils.setFullSpan(holder);
         }
     }
 

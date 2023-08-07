@@ -2,6 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
     android:orientation="vertical" >
 
 
@@ -38,8 +40,6 @@
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/ly_chat_icon"
             android:background="@drawable/chatto_bg_normal"
-            android:clickable="true"
-            android:focusable="true"
             android:gravity="center_vertical"
             android:lineSpacingExtra="2dp"
             android:minHeight="50dp"
